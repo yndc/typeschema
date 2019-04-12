@@ -6,7 +6,7 @@
  * License  : MIT
  */
 
-import { Ajv, ValidateFunction as AjvValidateFunction } from 'ajv'
+import { Ajv, ErrorObject, ValidateFunction as AjvValidateFunction } from 'ajv'
 import { JSONSchema7 } from 'json-schema'
 
 /**
@@ -15,6 +15,11 @@ import { JSONSchema7 } from 'json-schema'
 export interface ValidateFunction<T> extends AjvValidateFunction {
   _t?: T
 }
+
+/**
+ * Validation error handler
+ */
+export type ValidationErrorHandler = (errors: ErrorObject[]) => void
 
 /**
  * Make a validation function from the given schema
@@ -34,6 +39,8 @@ export function makeValidator<T>(schema: JSONSchema7, ajvInstance: Ajv): Validat
  * @param validator 
  * @param candidate 
  */
-export function assert<T>(validator: ValidateFunction<T>, candidate: any): candidate is T {
-  return validator(candidate) === true
+export function assert<T>(validator: ValidateFunction<T>, candidate: any, errorHandler: ValidationErrorHandler = () => {}): candidate is T {
+  const assertion = validator(candidate)
+  if (validator.errors) errorHandler(validator.errors)
+  return assertion === true
 }
