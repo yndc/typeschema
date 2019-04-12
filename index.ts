@@ -8,13 +8,12 @@
 
 import { Ajv, ErrorObject, ValidateFunction as AjvValidateFunction } from 'ajv'
 import { JSONSchema7 } from 'json-schema'
+import ajv = require('ajv');
 
 /**
- * Wrapper over validation function for specific type
+ * Validator for a schema
  */
-export interface ValidateFunction<T> extends AjvValidateFunction {
-  _t?: T
-}
+export type Validator<T> = (candidate: any, errorHandler: ValidationErrorHandler) => candidate is T
 
 /**
  * Validation error handler
@@ -26,21 +25,12 @@ export type ValidationErrorHandler = (errors: ErrorObject[]) => void
  * @param schema 
  * @param ajvInstance 
  */
-export function makeValidator<T>(schema: JSONSchema7, ajvInstance: Ajv): ValidateFunction<T> {
+export function makeValidator<T>(ajvInstance: Ajv, schema: JSONSchema7): Validator<T> {
   let validator = ajvInstance.getSchema(schema.$id)
-  if (validator === undefined) {
-    validator = ajvInstance.compile(schema)
+  if (validator === undefined) validator = ajvInstance.compile(schema)
+  return (candidate: any, errorHandler: ValidationErrorHandler = () => {}): candidate is T => {
+    const assertion = validator(candidate)
+    if (validator.errors) errorHandler(validator.errors)
+    return assertion === true
   }
-  return validator
-}
-
-/**
- * Asserts the given value as with the provided validation function
- * @param validator 
- * @param candidate 
- */
-export function assert<T>(validator: ValidateFunction<T>, candidate: any, errorHandler: ValidationErrorHandler = () => {}): candidate is T {
-  const assertion = validator(candidate)
-  if (validator.errors) errorHandler(validator.errors)
-  return assertion === true
 }
