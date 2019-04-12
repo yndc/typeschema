@@ -12,7 +12,7 @@ import { JSONSchema7 } from 'json-schema'
 /**
  * Wrapper over validation function for specific type
  */
-interface ValidateFunction<T> extends AjvValidateFunction {
+export interface ValidateFunction<T> extends AjvValidateFunction {
   _t?: T
 }
 
