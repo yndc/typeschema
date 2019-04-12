@@ -1,6 +1,6 @@
 {
   "name": "@yonderland/typeschema",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Collection of tools to validate values with JSON Schema and provides the necessary typescript interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
