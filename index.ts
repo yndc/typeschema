@@ -13,7 +13,7 @@ import ajv = require('ajv');
 /**
  * Validator for a schema
  */
-export type Validator<T> = (candidate: any, errorHandler: ValidationErrorHandler) => candidate is T
+export type Validator<T> = (candidate: any, errorHandler?: ValidationErrorHandler) => candidate is T
 
 /**
  * Validation error handler
