@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+      "declaration": true,
+      "module": "commonjs",
+      "target": "es5",
+      "resolveJsonModule": true,
+      "lib": [
+          "es2015",
+          "dom"
+      ],
+      "removeComments": false,
+      "sourceMap": true,
+      "outDir": "dist",
+  },
+  "include": [
+      "./**/*",
+  ],
+  "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+  ]
+}

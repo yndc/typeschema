@@ -6,18 +6,22 @@
  * License  : MIT
  */
 
-import { Ajv, ErrorObject, ValidateFunction as AjvValidateFunction } from 'ajv'
+import { Ajv, ErrorObject } from 'ajv'
 import { JSONSchema7 } from 'json-schema'
 
 /**
  * Validator for a schema
  */
-export type Validator<T> = (candidate: any, errorHandler?: ValidationErrorHandler) => candidate is T
+export interface Validator<T> {
+  (candidate: any, errorHandler?: ValidationErrorHandler): candidate is T
+}
 
 /**
  * Validation error handler
  */
-export type ValidationErrorHandler = (errors: ErrorObject[]) => void
+export interface ValidationErrorHandler { 
+  (errors: ErrorObject[]): void 
+}
 
 /**
  * Make a validation function from the given schema
