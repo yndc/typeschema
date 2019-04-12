@@ -8,7 +8,6 @@
 
 import { Ajv, ErrorObject, ValidateFunction as AjvValidateFunction } from 'ajv'
 import { JSONSchema7 } from 'json-schema'
-import ajv = require('ajv');
 
 /**
  * Validator for a schema
