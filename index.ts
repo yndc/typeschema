@@ -13,7 +13,8 @@ import { JSONSchema7 } from 'json-schema'
  * Validator for a schema
  */
 export interface Validator<T> {
-  (candidate: any, errorHandler?: ValidationErrorHandler): candidate is T
+  (candidate: any): candidate is T
+  errors: ErrorObject[]
 }
 
 /**
@@ -31,9 +32,9 @@ export interface ValidationErrorHandler {
 export function makeValidator<T>(ajvInstance: Ajv, schema: JSONSchema7): Validator<T> {
   let validator = ajvInstance.getSchema(schema.$id)
   if (validator === undefined) validator = ajvInstance.compile(schema)
-  return (candidate: any, errorHandler: ValidationErrorHandler = () => {}): candidate is T => {
+  return function result (candidate: any): candidate is T {
     const assertion = validator(candidate)
-    if (validator.errors) errorHandler(validator.errors)
+    if (assertion === false) (result as Validator<T>).errors = validator.errors
     return assertion === true
-  }
+  } as Validator<T>
 }
