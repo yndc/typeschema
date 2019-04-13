@@ -32,9 +32,10 @@ export interface ValidationErrorHandler {
 export function makeValidator<T>(ajvInstance: Ajv, schema: JSONSchema7): Validator<T> {
   let validator = ajvInstance.getSchema(schema.$id)
   if (validator === undefined) validator = ajvInstance.compile(schema)
-  return function result (candidate: any): candidate is T {
+  function result (candidate: any): candidate is T {
     const assertion = validator(candidate)
     if (assertion === false) (result as Validator<T>).errors = validator.errors
     return assertion === true
-  } as Validator<T>
+  }
+  return result as Validator<T>
 }
